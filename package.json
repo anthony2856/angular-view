@@ -11,54 +11,47 @@
         "Other"
     ],
     "activationEvents": [
-        "onLanguage:typescript"
+        "*"
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [
-            {
-                "command": "extension.sayHello",
-                "title": "Hello World"
-            }
-        ],
-        "configuration":{
-            "type": "object", 
+        "commands": [{
+            "command": "extension.sayHello",
+            "title": "Hello World"
+        }],
+        "configuration": {
+            "type": "object",
             "title": "Angular view settings",
             "properties": {
                 "angularview.isactive": {
-                    "type": [
-                        "boolean"
-                    ],
+                    "type": "boolean",
                     "default": true,
                     "description": "Use to desactivate extension"
                 },
                 "angularview.displaycss": {
-                    "type": [
-                        "boolean"
-                    ],
+                    "type": "boolean",
                     "default": true,
                     "description": "Use to display or not the css file on component select"
                 },
                 "angularview.tsViewColumn": {
-                    "type": [
-                        "number"
-                    ],
+                    "type": "number",
                     "default": 1,
                     "description": "ViewColumn number used to display the component class"
                 },
                 "angularview.htmlViewColumn": {
-                    "type": [
-                        "number"
-                    ],
+                    "type": "number",
                     "default": 2,
                     "description": "ViewColumn number used to display the html component file"
                 },
                 "angularview.cssViewColumn": {
-                    "type": [
-                        "number"
-                    ],
+                    "type": "number",
                     "default": 3,
                     "description": "ViewColumn number used to display the css component file"
+                },
+                "angularview.switchon": {
+                    "type": "array",
+                    "default": ["ts", "html", "css"],
+                    "description": "Use to select wich file type will fire event to display others files"
                 }
             }
         }

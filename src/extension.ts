@@ -61,17 +61,44 @@ export class AngularView {
         if (!editor) {
             return Promise.resolve();
         }
-        const document = editor.document;
-        if (document.languageId !== 'typescript') {
-            return Promise.resolve();
+
+        const fileName: string = editor.document.fileName;
+        const switchon: string[] = this.getConfig('switchon', ["ts", "html", "css"]);
+
+        if (switchon.findIndex(el => el === 'ts') !== -1 && fileName.match('.component.ts')) {
+            return this._onFileChange('ts', fileName);
         }
 
-        if (!document.fileName.match('.component.ts')) {
-            return Promise.resolve();
+        if (switchon.findIndex(el => el === 'html') !== -1 && fileName.match('.component.html')) {
+            return this._onFileChange('html', fileName);
         }
 
-        const htmlFile = document.fileName.replace('.component.ts', '.component.html');
-        const cssFile = document.fileName.replace('.component.ts', '.component.css');
+        if (switchon.findIndex(el => el === 'css') !== -1 && fileName.match('.component.css')) {
+            return this._onFileChange('css', fileName);
+        }
+    }
+
+    _onFileChange(_originalExtension: string, _originalFilename: string) {
+        let tsFilename: string;
+        let htmlFilename: string;
+        let cssFilename: string;
+        switch (_originalExtension) {
+            case 'html':
+                htmlFilename = _originalFilename; 
+                tsFilename = htmlFilename.replace('.component.html', '.component.ts');
+                cssFilename = htmlFilename.replace('.component.html', '.component.css');
+                break;
+            case 'css':
+                cssFilename = _originalFilename;
+                tsFilename = cssFilename.replace('.component.css', '.component.ts');
+                htmlFilename = cssFilename.replace('.component.css', '.component.html');
+                break;
+            default:
+                tsFilename = _originalFilename;    
+                htmlFilename = tsFilename.replace('.component.ts', '.component.html');
+                cssFilename = tsFilename.replace('.component.ts', '.component.css');
+                break;
+        }
         let options = {
             preserveFocus: true,
             preview: false,
@@ -79,9 +106,9 @@ export class AngularView {
         };
 
         return Promise.resolve()
-            .then(() => vscode.workspace.openTextDocument(document.fileName))
+            .then(() => vscode.workspace.openTextDocument(tsFilename))
             .then(_doc => vscode.window.showTextDocument(_doc, options))
-            .then(() => vscode.workspace.openTextDocument(htmlFile))
+            .then(() => vscode.workspace.openTextDocument(htmlFilename))
             .then(_doc => {
                 options.viewColumn = this.getNumberConfig('htmlViewColumn', 2);
                 return vscode.window.showTextDocument(_doc, options);
@@ -90,7 +117,7 @@ export class AngularView {
                 if (!this.getConfig('displaycss')) {
                     return Promise.reject(false)
                 }
-                return vscode.workspace.openTextDocument(cssFile);
+                return vscode.workspace.openTextDocument(cssFilename);
             })
             .then(_doc => {
                 options.viewColumn = this.getNumberConfig('cssViewColumn', 3);
