@@ -50,10 +50,14 @@ export class AngularView {
         return config.get(_name, _defaultValue);
     }
 
-    getNumberConfig(_name: string, _defaultValue: number = 1): number {
-        const val = this.getConfig(_name, _defaultValue);
-        let number: number = +val;
-        return number;
+    getViewColumnConfigFor(_name: string, _defaultValue: number = 1): number {
+        const defaultViewColumns = {
+            "ts": 1,
+            "html": 2,
+            "css": 3
+        };
+        const viewColumns = this.getConfig('viewColumns', defaultViewColumns);
+        return viewColumns[_name] || _defaultValue;
     }
 
     _onEditorChange() {
@@ -102,7 +106,7 @@ export class AngularView {
         let options = {
             preserveFocus: true,
             preview: false,
-            viewColumn: this.getNumberConfig('tsViewColumn', 1)
+            viewColumn: this.getViewColumnConfigFor('ts', 1)
         };
 
         return Promise.resolve()
@@ -110,7 +114,7 @@ export class AngularView {
             .then(_doc => vscode.window.showTextDocument(_doc, options))
             .then(() => vscode.workspace.openTextDocument(htmlFilename))
             .then(_doc => {
-                options.viewColumn = this.getNumberConfig('htmlViewColumn', 2);
+                options.viewColumn = this.getViewColumnConfigFor('html', 2);
                 return vscode.window.showTextDocument(_doc, options);
             })
             .then(() => {
@@ -120,7 +124,7 @@ export class AngularView {
                 return vscode.workspace.openTextDocument(cssFilename);
             })
             .then(_doc => {
-                options.viewColumn = this.getNumberConfig('cssViewColumn', 3);
+                options.viewColumn = this.getViewColumnConfigFor('css', 3);
                 return vscode.window.showTextDocument(_doc, options);
             })
             .catch(() => {
