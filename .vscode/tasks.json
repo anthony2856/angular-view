@@ -1,0 +1,17 @@
+{
+    "name": "npmTask",
+    "version": "0.1.0",
+    "suppressTaskName": true,
+    "command": "npm",
+    "isShellCommand": false,
+    "tasks": [
+        {
+            "taskName": "watchTask",
+            "isBackground": true,
+            "args": [
+                "run",
+                "watch"
+            ]
+        }
+    ]
+}
