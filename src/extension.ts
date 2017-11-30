@@ -34,9 +34,9 @@ export class AngularView {
         let subscriptions: Disposable[] = [];
         console.log('AngularView constructor');
 
-
-        vscode.window.onDidChangeActiveTextEditor(this._onEditorChange, this, subscriptions);
-        // vscode.workspace.onDidCloseTextDocument(this._onCloseDocument, this, subscriptions);
+        if (this.getConfig('isactive', true)) {
+            vscode.window.onDidChangeActiveTextEditor(this._onEditorChange, this, subscriptions);
+        }
 
         this._disposable = Disposable.from(...subscriptions);
     }
@@ -45,9 +45,15 @@ export class AngularView {
         this._disposable.dispose();
     }
 
-    _onCloseDocument(_textDoc) {
-        let editor = vscode.window.activeTextEditor;
-        console.log('close');
+    getConfig(_name: string, _defaultValue?) {
+        const config = vscode.workspace.getConfiguration('angularview');
+        return config.get(_name, _defaultValue);
+    }
+
+    getNumberConfig(_name: string, _defaultValue: number = 1): number {
+        const val = this.getConfig(_name, _defaultValue);
+        let number: number = +val;
+        return number;
     }
 
     _onEditorChange() {
@@ -69,20 +75,29 @@ export class AngularView {
         let options = {
             preserveFocus: true,
             preview: false,
-            viewColumn: 1
+            viewColumn: this.getNumberConfig('tsViewColumn', 1)
         };
 
-        return vscode.workspace.openTextDocument(document.fileName)
+        return Promise.resolve()
+            .then(() => vscode.workspace.openTextDocument(document.fileName))
             .then(_doc => vscode.window.showTextDocument(_doc, options))
             .then(() => vscode.workspace.openTextDocument(htmlFile))
             .then(_doc => {
-                options.viewColumn = 2;
+                options.viewColumn = this.getNumberConfig('htmlViewColumn', 2);
                 return vscode.window.showTextDocument(_doc, options);
             })
-            .then(() => vscode.workspace.openTextDocument(cssFile))
+            .then(() => {
+                if (!this.getConfig('displaycss')) {
+                    return Promise.reject(false)
+                }
+                return vscode.workspace.openTextDocument(cssFile);
+            })
             .then(_doc => {
-                options.viewColumn = 3;
+                options.viewColumn = this.getNumberConfig('cssViewColumn', 3);
                 return vscode.window.showTextDocument(_doc, options);
-            });
+            })
+            .catch(() => {
+                return Promise.resolve();
+            })
     }
 }

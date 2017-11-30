@@ -20,7 +20,48 @@
                 "command": "extension.sayHello",
                 "title": "Hello World"
             }
-        ]
+        ],
+        "configuration":{
+            "type": "object", 
+            "title": "Angular view settings",
+            "properties": {
+                "angularview.isactive": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "default": true,
+                    "description": "Use to desactivate extension"
+                },
+                "angularview.displaycss": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "default": true,
+                    "description": "Use to display or not the css file on component select"
+                },
+                "angularview.tsViewColumn": {
+                    "type": [
+                        "number"
+                    ],
+                    "default": 1,
+                    "description": "ViewColumn number used to display the component class"
+                },
+                "angularview.htmlViewColumn": {
+                    "type": [
+                        "number"
+                    ],
+                    "default": 2,
+                    "description": "ViewColumn number used to display the html component file"
+                },
+                "angularview.cssViewColumn": {
+                    "type": [
+                        "number"
+                    ],
+                    "default": 3,
+                    "description": "ViewColumn number used to display the css component file"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
