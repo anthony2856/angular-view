@@ -34,9 +34,7 @@ export class AngularView {
         let subscriptions: Disposable[] = [];
         console.log('AngularView constructor');
 
-        if (this.getConfig('isactive', true)) {
-            vscode.window.onDidChangeActiveTextEditor(this._onEditorChange, this, subscriptions);
-        }
+        vscode.window.onDidChangeActiveTextEditor(this._onEditorChange, this, subscriptions);
 
         this._disposable = Disposable.from(...subscriptions);
     }
@@ -61,6 +59,10 @@ export class AngularView {
     }
 
     _onEditorChange() {
+        if (!this.getConfig('isactive', true)) {
+            return Promise.resolve();
+        }
+
         let editor = vscode.window.activeTextEditor;
         if (!editor) {
             return Promise.resolve();
@@ -88,7 +90,7 @@ export class AngularView {
         let cssFilename: string;
         switch (_originalExtension) {
             case 'html':
-                htmlFilename = _originalFilename; 
+                htmlFilename = _originalFilename;
                 tsFilename = htmlFilename.replace('.component.html', '.component.ts');
                 cssFilename = htmlFilename.replace('.component.html', '.component.css');
                 break;
@@ -98,7 +100,7 @@ export class AngularView {
                 htmlFilename = cssFilename.replace('.component.css', '.component.html');
                 break;
             default:
-                tsFilename = _originalFilename;    
+                tsFilename = _originalFilename;
                 htmlFilename = tsFilename.replace('.component.ts', '.component.html');
                 cssFilename = tsFilename.replace('.component.ts', '.component.css');
                 break;
