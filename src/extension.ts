@@ -83,14 +83,12 @@ export class AngularView {
 
     openFileWithExtension(_extension: string, _originalFilename?: string) {
         const { originalFilename, originalExtension, newFilename } = this.getFilenames(_extension, _originalFilename);
-        if (!originalFilename) {
+        if (!originalFilename || !newFilename) {
             return;
         }
 
         vscodeHelper.openFile(originalFilename, Config.getViewColumnConfigFor(originalExtension));
-        if (newFilename) {
-            vscodeHelper.openFile(newFilename, Config.getViewColumnConfigFor(_extension));
-        }
+        vscodeHelper.openFile(newFilename, Config.getViewColumnConfigFor(_extension));
     }
 
     _onUnitTestChange(fileName: string) {
