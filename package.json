@@ -16,17 +16,60 @@
     "main": "./out/extension",
     "contributes": {
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        }],
+                "command": "angularView.changeMode",
+                "title": "Angular View - Change mode"
+            },
+            {
+                "command": "angularView.openTsFile",
+                "title": "Angular View - Open corresponding typescript file"
+            },
+            {
+                "command": "angularView.openHtmlFile",
+                "title": "Angular View - Open corresponding html file"
+            },
+            {
+                "command": "angularView.openCssFile",
+                "title": "Angular View - Open corresponding css file"
+            },
+            {
+                "command": "angularView.openUnitTestFile",
+                "title": "Angular View - Open corresponding unit test file"
+            }
+        ],
+        "keybindings": [{
+                "command": "angularView.changeMode",
+                "key": "Ctrl+Alt+M"
+            },
+            {
+                "command": "angularView.openTsFile",
+                "key": "Ctrl+Alt+T"
+            },
+            {
+                "command": "angularView.openHtmlFile",
+                "key": "Ctrl+Alt+H"
+            },
+            {
+                "command": "angularView.openCssFile",
+                "key": "Ctrl+Alt+C"
+            },
+            {
+                "command": "angularView.openUnitTestFile",
+                "key": "Ctrl+Alt+U"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Angular view settings",
             "properties": {
-                "angularview.isactive": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Use to desactivate extension"
+                "angularview.mode": {
+                    "type": "string",
+                    "default": "component",
+                    "enum": [
+                        "component",
+                        "unitTest",
+                        "e2eTest",
+                        "inactive"
+                    ]
                 },
                 "angularview.displaycss": {
                     "type": "boolean",
@@ -39,7 +82,10 @@
                     "default": {
                         "ts": 1,
                         "html": 2,
-                        "css": 3
+                        "css": 3,
+                        "spec": 2,
+                        "e2e": 1,
+                        "po": 2
                     },
                     "properties": {
                         "ts": {
@@ -53,9 +99,13 @@
                         "css": {
                             "type": "number",
                             "default": 3
+                        },
+                        "spec": {
+                            "type": "number",
+                            "default": 2
                         }
                     }
-                }, 
+                },
                 "angularview.switchon": {
                     "type": "array",
                     "default": ["ts", "html", "css"],
