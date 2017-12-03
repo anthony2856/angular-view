@@ -13,6 +13,15 @@ export class vscodeHelper {
         return vscode.window.showTextDocument(doc, options);
     }
 
+    static getCurrentFilename(): string {
+        let editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return '';
+        }
+
+        return editor.document.fileName;
+    }
+
     static getFileExtension(_filename: string) {
         const arr = _filename.split('.');
         const ext = arr[arr.length - 1];

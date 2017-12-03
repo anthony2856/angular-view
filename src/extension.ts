@@ -67,12 +67,7 @@ export class AngularView {
         let obj = new filenames(_originalFilename);
 
         if (!obj.originalFilename) {
-            let editor = vscode.window.activeTextEditor;
-            if (!editor) {
-                return obj;
-            }
-
-            obj.originalFilename = editor.document.fileName;
+            obj.originalFilename = vscodeHelper.getCurrentFilename();
         }
 
         Object.keys(map).forEach(_key => {
